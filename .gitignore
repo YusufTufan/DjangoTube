@@ -1,0 +1,19 @@
+# Sanal ortam klasörü
+venv/
+
+# Veritabanı dosyası
+db.sqlite3
+*.sqlite3
+
+# Python cache dosyaları
+__pycache__/
+*.pyc
+
+# Statik ve media dosyaları (ileride eklenecek)
+/static/
+/media/
+
+# IDE ve OS özel dosyaları
+.vscode/
+.idea/
+.DS_Store
