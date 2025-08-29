@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ object.title }}</title>
+</head>
+<body>
+    <a href="{% url 'home' %}">Ana Sayfaya Dön</a>
+    <hr>
+    <h1>{{ object.title }}</h1>
+    <p>Yükleyen: {{ object.uploader.name }} | Yüklenme Tarihi: {{ object.created_at|date:"d F Y" }}</p>
+
+    <video width="800" controls>
+        <source src="{{ object.video_file.url }}" type="video/mp4">
+        Tarayıcınız video etiketini desteklemiyor.
+    </video>
+
+    <hr>
+    <h3>Açıklama</h3>
+    <p>{{ object.description }}</p>
+</body>
+</html>

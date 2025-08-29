@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Yükle</title>
+</head>
+<body>
+    <h2>Yeni Video Yükle</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Yükle</button>
+    </form>
+</body>
+</html>
