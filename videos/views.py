@@ -25,11 +25,18 @@ class UploadVideoView(LoginRequiredMixin, View):
         return render(request, 'videos/upload_video.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
+        # BU SATIRLARDAN BAŞLAYARAK TÜM İÇERİĞİN GİRİNTİLİ OLDUĞUNDAN EMİN OL
+        print("POST isteği geldi.") # 1. Kontrol Noktası
         form = VideoUploadForm(request.POST, request.FILES)
+
         if form.is_valid():
+            print("Form GEÇERLİ.") # 2. Kontrol Noktası
             video = form.save(commit=False)
             video.uploader = request.user
             video.save()
-            # Video yüklendikten sonra ana sayfaya yönlendir
+            print("Video kaydedildi, ana sayfaya yönlendiriliyor.") # 3. Kontrol Noktası
             return redirect('home')
-        return render(request, 'videos/upload_video.html', {'form': form})
+        else:
+            print("Form GEÇERSİZ. Hatalar şunlar:") # 4. Kontrol Noktası
+            print(form.errors) # Bize sorunun ne olduğunu bu satır söyleyecek.
+            return render(request, 'videos/upload_video.html', {'form': form})

@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DjangoTube{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <nav>
+        <a href="{% url 'home' %}"><b>DjangoTube</b></a> |
+
+        {% if user.is_authenticated %}
+            <span>Merhaba, {{ user.name }}!</span> |
+            <a href="{% url 'upload_video' %}">Video Yükle</a> |
+            <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Çıkış Yap</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Giriş Yap</a> |
+            <a href="{% url 'signup' %}">Kayıt Ol</a>
+        {% endif %}
+    </nav>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <ul>
+                <li><a href="{% url 'home' %}">Ana Sayfa</a></li>
+            </ul>
+        </aside>
+
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+    </body>
+</html>

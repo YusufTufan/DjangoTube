@@ -1,23 +1,34 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Ana Sayfa - DjangoTube</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Ana Sayfa - DjangoTube{% endblock %}
+
+{% block content %}
     <h1>Videolar</h1>
 
     <div class="video-list">
+        {# VİDEOLARI LİSTELEMEK İÇİN DÖNGÜYÜ BURADA BAŞLATIYORUZ #}
         {% for video in videos %}
             <div class="video-item">
-              <a href="{% url 'video_detail' pk=video.pk %}">
-                <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}" width="320">
-                <h3>{{ video.title }}</h3>
-                <p>Yükleyen: {{ video.uploader.name }}</p>
-              </a>
+                <a href="{% url 'video_detail' pk=video.pk %}">
+                    <img class="thumbnail" src="{{ video.thumbnail.url }}" alt="{{ video.title }}">
+                </a>
+                <div class="video-details">
+                    <div class="channel-avatar">
+                        <span>{{ video.uploader.name|first|upper }}</span>
+                    </div>
+                    <div class="video-text">
+                        <h3 class="video-title">{{ video.title }}</h3>
+                        <p class="channel-name">{{ video.uploader.name }}</p>
+                        <p class="video-metadata">
+                            100 B görüntüleme • {{ video.created_at|timesince }} önce
+                        </p>
+                    </div>
+                </div>
             </div>
+        {# Eğer hiç video yoksa bu mesajı göster #}
         {% empty %}
             <p>Henüz hiç video yüklenmemiş.</p>
+        {# Döngüyü burada bitiriyoruz #}
         {% endfor %}
     </div>
-</body>
-</html>
+{% endblock %}
