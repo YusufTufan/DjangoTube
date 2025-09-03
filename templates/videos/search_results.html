@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}"{{ query }}" için arama sonuçları{% endblock %}
+
+{% block content %}
+    <h1>"{{ query }}" için arama sonuçları</h1>
+    <p>{{ videos.count }} video bulundu.</p>
+    <hr>
+
+    <div class="video-list">
+        {% for video in videos %}
+            <div class="video-item">
+                <a href="{% url 'video_detail' pk=video.pk %}">
+                    <img class="thumbnail" src="{{ video.thumbnail.url }}" alt="{{ video.title }}">
+                </a>
+                <div class="video-details">
+                    <div class="channel-avatar">
+                        <span>{{ video.uploader.name|first|upper }}</span>
+                    </div>
+                    <div class="video-text">
+                        <h3 class="video-title">{{ video.title }}</h3>
+                        <p class="channel-name">{{ video.uploader.name }}</p>
+                        <p class="video-metadata">
+                            {{ video.created_at|timesince }} önce
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>Bu aramayla eşleşen video bulunamadı.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

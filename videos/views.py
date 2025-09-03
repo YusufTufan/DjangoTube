@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View, DetailView
-from .forms import VideoUploadForm
+from django.views.generic import View, DetailView 
+from .forms import VideoUploadForm, CommentForm
 # Sadece giriş yapmış kullanıcıların erişimini sağlamak için
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Video
+from .models import Video, Comment
+
+from django.db.models import Q
 
 # Yeni Ana Sayfa View'ı
 class HomeView(View):
@@ -14,9 +16,40 @@ class HomeView(View):
         return render(request, 'videos/home.html', {'videos': videos})
 
 
-class VideoDetailView(DetailView):
-    model = Video
-    template_name = 'videos/video_detail.html'
+class VideoDetailView(View):
+    def get(self, request, pk, *args, **kwargs):
+        video = Video.objects.get(pk=pk)
+        form = CommentForm()
+        comments = Comment.objects.filter(video=video).order_by('-created_at')
+
+        context = {
+            'object': video,
+            'form': form,
+            'comments': comments
+        }
+        return render(request, 'videos/video_detail.html', context)
+
+    def post(self, request, pk, *args, **kwargs):
+        video = Video.objects.get(pk=pk)
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.video = video
+            comment.save()
+
+        comments = Comment.objects.filter(video=video).order_by('-created_at')
+        # Yorum yapıldıktan sonra formu temizlemek için yeni bir boş form oluştur
+        form = CommentForm()
+
+        context = {
+            'object': video,
+            'form': form,
+            'comments': comments
+        }
+        return render(request, 'videos/video_detail.html', context)
+
 
 
 class UploadVideoView(LoginRequiredMixin, View):
@@ -40,3 +73,22 @@ class UploadVideoView(LoginRequiredMixin, View):
             print("Form GEÇERSİZ. Hatalar şunlar:") # 4. Kontrol Noktası
             print(form.errors) # Bize sorunun ne olduğunu bu satır söyleyecek.
             return render(request, 'videos/upload_video.html', {'form': form})
+
+
+
+class SearchResultsView(View):
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get('q')
+        if query:
+            # Video başlığında veya açıklamasında arama yap (büyük/küçük harf duyarsız)
+            videos = Video.objects.filter(
+                Q(title__icontains=query) | Q(description__icontains=query)
+            ).order_by('-created_at')
+        else:
+            videos = Video.objects.none() # Eğer arama boşsa hiçbir şey gösterme
+
+        context = {
+            'query': query,
+            'videos': videos
+        }
+        return render(request, 'videos/search_results.html', context)

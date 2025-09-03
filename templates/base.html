@@ -15,7 +15,10 @@
       </div>
 
       <div class="nav-center">
-
+        <form action="{% url 'search_results' %}" method="get" class="search-form">
+          <input type="text" name="q" placeholder="Ara..." class="search-input">
+          <button type="submit" class="search-button">Ara</button>
+        </form>
       </div>
 
       <div class="nav-right">
