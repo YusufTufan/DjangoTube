@@ -1,3 +1,4 @@
+
 # DjangoTube - Video Sharing Platform
 
 ---
@@ -41,7 +42,6 @@
   - **Database:** SQLite 3
   - **Version Control:** Git & GitHub
 
------
 
 ## 🚀 Getting Started
 
