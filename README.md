@@ -1,7 +1,4 @@
-
 # DjangoTube - Video Sharing Platform
-
----
 
 ## About The Project / Proje Hakkında
 
