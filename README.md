@@ -1,6 +1,6 @@
 # DjangoTube - Video Sharing Platform
 
-\<br\>
+---
 
 ## About The Project / Proje Hakkında
 
@@ -105,4 +105,4 @@ Make sure you have the following installed on your system:
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the [LICENSE](https://www.google.com/search?q=LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
