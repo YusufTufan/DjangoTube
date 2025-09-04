@@ -43,6 +43,7 @@
 
             {% if user.is_authenticated %}
             <li><a href="{% url 'upload_video' %}">Video Yükle</a></li>
+            <li><a href="{% url 'my_videos' %}">Videolarım</a></li>
             {% endif %}
 
             <li><a href="#">Shorts</a></li>

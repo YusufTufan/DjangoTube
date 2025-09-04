@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View, DetailView 
+from django.views.generic import View, DetailView
 from .forms import VideoUploadForm, CommentForm
 # Sadece giriş yapmış kullanıcıların erişimini sağlamak için
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -92,3 +92,15 @@ class SearchResultsView(View):
             'videos': videos
         }
         return render(request, 'videos/search_results.html', context)
+
+
+
+
+class MyVideosView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        # Sadece o an giriş yapmış kullanıcının (request.user) yüklediği videoları filtrele
+        videos = Video.objects.filter(uploader=request.user).order_by('-created_at')
+        context = {
+            'videos': videos
+        }
+        return render(request, 'videos/my_videos.html', context)

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import HomeView, UploadVideoView, VideoDetailView, SearchResultsView
+from .views import HomeView, UploadVideoView, VideoDetailView, SearchResultsView, MyVideosView
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -8,4 +8,6 @@ urlpatterns = [
     path('video/<int:pk>/', VideoDetailView.as_view(), name='video_detail'),
 
     path('search/', SearchResultsView.as_view(), name='search_results'),
+
+    path('my-videos/', MyVideosView.as_view(), name='my_videos'),
 ]

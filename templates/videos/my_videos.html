@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Videolarım - DjangoTube{% endblock %}
+
+{% block content %}
+    <h1>Videolarım</h1> {# Sadece bu başlığı değiştirdik #}
+
+    <div class="video-list">
+        {% for video in videos %}
+            <div class="video-item">
+                <a href="{% url 'video_detail' pk=video.pk %}">
+                    <img class="thumbnail" src="{{ video.thumbnail.url }}" alt="{{ video.title }}">
+                </a>
+                <div class="video-details">
+                    <div class="channel-avatar">
+                        <span>{{ video.uploader.name|first|upper }}</span>
+                    </div>
+                    <div class="video-text">
+                        <h3 class="video-title">{{ video.title }}</h3>
+                        <p class="channel-name">{{ video.uploader.name }}</p>
+                        <p class="video-metadata">
+                            {{ video.created_at|timesince }} önce
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>Henüz hiç video yüklememişsiniz.</p> {# Mesajı kişiselleştirdik #}
+        {% endfor %}
+    </div>
+{% endblock %}
