@@ -1,35 +1,39 @@
 """
-URL configuration for djangotube project.
+Djangotube projesinin ana URL yapılandırma dosyası.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+Bu dosya, projenin en üst seviye URL yönlendirmelerini yönetir.
+Gelen bir URL isteği ilk olarak buraya gelir ve Django, 'urlpatterns' listesindeki
+kalıpları (patterns) sırayla kontrol ederek isteği ilgili uygulamaya ('users', 'videos' vb.)
+veya doğrudan bir view'a yönlendirir.
 """
 from django.contrib import admin
 from django.urls import path, include
 
+# Geliştirme ortamında statik ve media dosyalarını sunabilmek için
+# gerekli olan ayarları ve fonksiyonları import ediyoruz.
 from django.conf import settings
 from django.conf.urls.static import static
 
-
+# Projenin URL haritasını içeren ana liste.
 urlpatterns = [
+
+    # '/admin/' adresine gelen istekleri Django'nun hazır admin paneline yönlendirir.
     path('admin/', admin.site.urls),
-     # /accounts/ ile başlayan tüm URL'leri 'users.urls' dosyasına yönlendir.
+
+    # '/accounts/' ile başlayan tüm URL'leri (örn: /accounts/login/)
+    # 'users' uygulamasının kendi 'urls.py' dosyasına yönlendirir.
+    # Bu, kullanıcıyla ilgili tüm URL'lerin tek bir yerde toplanmasını sağlar.
     path('accounts/', include('users.urls')),
 
-    # Ana sayfa, video yükleme ve video detay ile ilgili tüm URL'leri
-    # videos.urls dosyasına yönlendiriyoruz.
+    # Ana dizin ('/') veya video ile ilgili diğer tüm URL'leri
+    # 'videos' uygulamasının kendi 'urls.py' dosyasına yönlendirir.
+    # Projenin ana mantığı bu uygulamada olduğu için, ana yolu ona devrediyoruz.
     path('', include('videos.urls')),
 ]
 
+# Bu blok, sadece geliştirme modunda (settings.DEBUG = True iken) çalışır.
+# Kullanıcıların yüklediği videolar gibi media dosyalarının
+# geliştirme sunucusu tarafından sunulabilmesini sağlar.
+# Production (canlı) ortamında bu dosyalar farklı bir yöntemle sunulur.
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

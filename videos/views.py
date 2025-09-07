@@ -1,27 +1,41 @@
+# Django'nun temel araçlarını ve sınıfların importu
 from django.shortcuts import render, redirect
 from django.views.generic import View, DetailView
-from .forms import VideoUploadForm, CommentForm
-# Sadece giriş yapmış kullanıcıların erişimini sağlamak için
+
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-from .models import Video, Comment
-
 from django.db.models import Q
 
-# Yeni Ana Sayfa View'ı
+# Kendi uygulamamızdan gerekli modellerin ve formların importu
+from .models import Video, Comment
+from .forms import VideoUploadForm, CommentForm
+
+# --- Ana Sayfa ve Video Görüntüleme View'ları ---
 class HomeView(View):
+    """
+    Ana sayfayı yönetir. Tüm videoları veritabanından çeker ve listeler.
+    """
     def get(self, request, *args, **kwargs):
-        # Tüm video nesnelerini en yeniden eskiye doğru sırala
+         # Tüm Video nesnelerini, oluşturulma tarihine göre en yeniden eskiye doğru sıralayarak al.
         videos = Video.objects.all().order_by('-created_at')
+         # 'videos' verisini 'videos/home.html' şablonuna gönder ve sayfayı oluştur.
         return render(request, 'videos/home.html', {'videos': videos})
 
 
-class VideoDetailView(View):
-    def get(self, request, pk, *args, **kwargs):
-        video = Video.objects.get(pk=pk)
-        form = CommentForm()
-        comments = Comment.objects.filter(video=video).order_by('-created_at')
 
+class VideoDetailView(View):
+     """
+    Tek bir videonun detay sayfasını yönetir.
+    Yorumları listeler ve yeni yorumların eklenmesini sağlar.
+    """
+    def get(self, request, pk, *args, **kwargs):
+         """Sayfa yüklendiğinde (GET isteği) çalışır."""
+         # URL'den gelen 'pk' (primary key) ile ilgili videoyu bul.
+        video = Video.objects.get(pk=pk)
+        # Boş bir yorum formu oluştur.
+        form = CommentForm()
+        # Sadece bu videoya ait olan yorumları al ve en yeniden eskiye sırala.
+        comments = Comment.objects.filter(video=video).order_by('-created_at')
+        # Şablona gönderilecek verileri bir 'context' sözlüğünde topla.
         context = {
             'object': video,
             'form': form,
@@ -30,17 +44,24 @@ class VideoDetailView(View):
         return render(request, 'videos/video_detail.html', context)
 
     def post(self, request, pk, *args, **kwargs):
+        """Form gönderildiğinde (POST isteği) çalışır."""
         video = Video.objects.get(pk=pk)
+        # Gönderilen form verileriyle bir CommentForm örneği oluştur.
         form = CommentForm(request.POST)
 
         if form.is_valid():
+            # Şimdi Comment nesnesini veritabanına kaydet.
             comment = form.save(commit=False)
+            # Yorumun hangi videoya ait olduğunu belirt.
             comment.user = request.user
+            # Yorumun hangi videoya ait olduğunu belirt.
             comment.video = video
+            # Şimdi Comment nesnesini veritabanına kaydet.
             comment.save()
 
+        # Sayfayı güncel yorum listesiyle yeniden yüklemek için verileri tekrar çek.
         comments = Comment.objects.filter(video=video).order_by('-created_at')
-        # Yorum yapıldıktan sonra formu temizlemek için yeni bir boş form oluştur
+
         form = CommentForm()
 
         context = {
@@ -53,39 +74,54 @@ class VideoDetailView(View):
 
 
 class UploadVideoView(LoginRequiredMixin, View):
+    """
+    Video yükleme sayfasını yönetir. Sadece giriş yapmış kullanıcılar erişebilir.
+    """
     def get(self, request, *args, **kwargs):
+        """Sayfa ilk açıldığında boş bir form gösterir."""
         form = VideoUploadForm()
         return render(request, 'videos/upload_video.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
-        # BU SATIRLARDAN BAŞLAYARAK TÜM İÇERİĞİN GİRİNTİLİ OLDUĞUNDAN EMİN OL
+        """Video yükleme formu gönderildiğinde çalışır."""
+        # Hem form verilerini (request.POST) hem de yüklenen dosyaları (request.FILES) al.
         print("POST isteği geldi.") # 1. Kontrol Noktası
         form = VideoUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
             print("Form GEÇERLİ.") # 2. Kontrol Noktası
             video = form.save(commit=False)
+             # Videoyu yükleyen kişiyi, o an giriş yapmış kullanıcı olarak ata.
             video.uploader = request.user
             video.save()
+            # Başarılı yüklemeden sonra kullanıcıyı ana sayfaya yönlendir.
             print("Video kaydedildi, ana sayfaya yönlendiriliyor.") # 3. Kontrol Noktası
             return redirect('home')
         else:
             print("Form GEÇERSİZ. Hatalar şunlar:") # 4. Kontrol Noktası
-            print(form.errors) # Bize sorunun ne olduğunu bu satır söyleyecek.
+            print(form.errors)
+            # Form geçerli değilse, hatalarla birlikte formu tekrar göster.
             return render(request, 'videos/upload_video.html', {'form': form})
 
 
 
 class SearchResultsView(View):
+    """
+    Arama sonuçlarını gösteren sayfayı yönetir.
+    """
     def get(self, request, *args, **kwargs):
+        # URL'den 'q' parametresini al (örn: /search/?q=django).
         query = request.GET.get('q')
         if query:
-            # Video başlığında veya açıklamasında arama yap (büyük/küçük harf duyarsız)
+            # Eğer bir arama sorgusu varsa:
+            # Video başlığında VEYA açıklamasında sorguyu içeren videoları bul.
+            # '__icontains' büyük/küçük harfe duyarsız arama yapar.
             videos = Video.objects.filter(
                 Q(title__icontains=query) | Q(description__icontains=query)
             ).order_by('-created_at')
         else:
-            videos = Video.objects.none() # Eğer arama boşsa hiçbir şey gösterme
+            # Eğer arama sorgusu boşsa, hiçbir video gösterme.
+            videos = Video.objects.none()
 
         context = {
             'query': query,
@@ -97,8 +133,11 @@ class SearchResultsView(View):
 
 
 class MyVideosView(LoginRequiredMixin, View):
+    """
+    Kullanıcının sadece kendi yüklediği videoları listeler.
+    """
     def get(self, request, *args, **kwargs):
-        # Sadece o an giriş yapmış kullanıcının (request.user) yüklediği videoları filtrele
+         # Video modelinde, 'uploader' alanı o anki kullanıcı olanları filtrele.
         videos = Video.objects.filter(uploader=request.user).order_by('-created_at')
         context = {
             'videos': videos
