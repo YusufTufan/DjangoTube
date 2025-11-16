@@ -100,6 +100,14 @@ Make sure you have the following installed on your system:
 
     The application will be available at `http://127.0.0.1:8000/`.
 
+
+### ✨ Modern React Versiyonu
+
+**TR:** Bu proje, modern ve ayrıştırılmış bir mimariyle tamamen yeniden yazıldı! Bu yeni versiyon, backend için tam bir Django REST Framework API'si ve frontend için dinamik bir React arayüzü içermektedir.
+
+**[➡️ Check out the DjangoTube React API Version Here](https://github.com/YusufTufan/DjangoTube-React-API)**
+
+
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
