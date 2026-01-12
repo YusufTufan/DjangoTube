@@ -4,7 +4,7 @@
 
 **EN:** DjangoTube is a robust web application developed to provide a high-quality video streaming and sharing service. This project mirrors the core functionalities of major video platforms like YouTube, built on a powerful and secure backend powered by the Django framework. The primary goal was to create a scalable and maintainable application that delivers a clean, intuitive, and engaging user experience.
 
------
+----- 
 
 **TR:** DjangoTube, yüksek kaliteli bir video akışı ve paylaşım hizmeti sunmak amacıyla geliştirilmiş sağlam bir web uygulamasıdır. Bu proje, Django çatısının gücüyle desteklenen güvenli bir backend üzerinde, YouTube gibi büyük video platformlarının temel işlevlerini taklit etmektedir. Temel amaç, temiz, sezgisel ve ilgi çekici bir kullanıcı deneyimi sunan, ölçeklenebilir ve bakımı kolay bir uygulama oluşturmaktı.
 
