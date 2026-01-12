@@ -1,14 +1,12 @@
 # DjangoTube - Video Sharing Platform
 
-## About The Project / Proje Hakkında
+## About The Project
 
 **EN:** DjangoTube is a robust web application developed to provide a high-quality video streaming and sharing service. This project mirrors the core functionalities of major video platforms like YouTube, built on a powerful and secure backend powered by the Django framework. The primary goal was to create a scalable and maintainable application that delivers a clean, intuitive, and engaging user experience.
 
 ----- 
 
-**TR:** DjangoTube, yüksek kaliteli bir video akışı ve paylaşım hizmeti sunmak amacıyla geliştirilmiş sağlam bir web uygulamasıdır. Bu proje, Django çatısının gücüyle desteklenen güvenli bir backend üzerinde, YouTube gibi büyük video platformlarının temel işlevlerini taklit etmektedir. Temel amaç, temiz, sezgisel ve ilgi çekici bir kullanıcı deneyimi sunan, ölçeklenebilir ve bakımı kolay bir uygulama oluşturmaktı.
-
-## ✨ Key Features / ✨ Ana Özellikler
+## ✨ Key Features
 
 **EN:**
 
@@ -21,16 +19,7 @@
 
 -----
 
-**TR:**
-
-  - **🎥 Video Yükleme & Yönetimi:** Kimliği doğrulanmış kullanıcılar video içeriklerini kolayca yükleyebilir ve yönetebilir.
-  - **▶️ Sorunsuz Video Oynatma:** Sorunsuz bir izleme deneyimi için entegre HTML5 oynatıcılı video detay sayfası.
-  - **👤 Kullanıcı Kimlik Doğrulama:** Güvenli kullanıcı kayıt ve giriş sistemi.
-  - **💬 Etkileşimli Yorum Sistemi:** Kullanıcılar, yorum göndererek içerikle etkileşime girebilir.
-  - **🔍 Güçlü Arama Fonksiyonu:** Videoları başlığa göre hızla bulmayı sağlayan arama çubuğu.
-  - **🎨 Temiz ve Duyarlı Arayüz:** HTML5 ve CSS ile oluşturulmuş, cihazlar arasında tutarlı bir deneyim sağlayan arayüz.
-
-## 🛠️ Tech Stack / 🛠️ Kullanılan Teknolojiler
+## 🛠️ Tech Stack
 
 **EN:**
 
